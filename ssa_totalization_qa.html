@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SSA Totalization Agreements Q&A</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f9f8f6;
+      --surface: #ffffff;
+      --surface2: #f1efe8;
+      --border: rgba(0,0,0,0.12);
+      --border-md: rgba(0,0,0,0.22);
+      --text: #1a1a18;
+      --text-muted: #5f5e5a;
+      --text-faint: #888780;
+      --blue-bg: #e6f1fb;
+      --blue-text: #042c53;
+      --blue-border: #b5d4f4;
+      --blue-btn: #185fa5;
+      --blue-btn-hover: #0c447c;
+      --green-bg: #eaf3de;
+      --green-text: #173404;
+      --green-border: #c0dd97;
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1c1c1a;
+        --surface: #2c2c2a;
+        --surface2: #242422;
+        --border: rgba(255,255,255,0.1);
+        --border-md: rgba(255,255,255,0.2);
+        --text: #f1efe8;
+        --text-muted: #b4b2a9;
+        --text-faint: #888780;
+        --blue-bg: #042c53;
+        --blue-text: #b5d4f4;
+        --blue-border: #185fa5;
+        --blue-btn: #378add;
+        --blue-btn-hover: #85b7eb;
+        --green-bg: #173404;
+        --green-text: #c0dd97;
+        --green-border: #3b6d11;
+      }
+    }
+
+    body {
+      font-family: 'DM Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    #api-banner {
+      background: #faeeda;
+      border: 0.5px solid #fac775;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #api-banner.hidden { display: none; }
+
+    .banner-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #633806;
+    }
+
+    .banner-row { display: flex; gap: 8px; align-items: center; }
+
+    #api-key-input {
+      flex: 1;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      padding: 8px 12px;
+      border: 0.5px solid #fac775;
+      border-radius: var(--radius);
+      background: #fffdf7;
+      color: #412402;
+      outline: none;
+    }
+
+    #api-key-input:focus { border-color: #ba7517; }
+
+    #save-key-btn {
+      background: #ba7517;
+      color: #faeeda;
+      border: none;
+      border-radius: var(--radius);
+      padding: 8px 16px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    #save-key-btn:hover { background: #854f0b; }
+
+    .banner-hint { font-size: 10px; color: #854f0b; line-height: 1.5; }
+    .banner-hint a { color: #633806; }
+
+    .card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .card.no-banner { border-radius: var(--radius-lg); }
+
+    .header {
+      padding: 1.5rem 1.5rem 1.25rem;
+      border-bottom: 0.5px solid var(--border);
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .badge {
+      background: var(--blue-bg);
+      color: var(--blue-text);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .header-text h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.3;
+      color: var(--text);
+    }
+
+    .header-text p {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.6;
+    }
+
+    .suggestions {
+      padding: 1rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .suggestion-btn {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text-muted);
+      background: var(--surface2);
+      border: 0.5px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .suggestion-btn:hover {
+      background: var(--surface);
+      border-color: var(--border-md);
+      color: var(--text);
+    }
+
+    .chat-area {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 200px;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 3rem 0;
+      color: var(--text-faint);
+    }
+
+    .empty-icon { font-size: 28px; opacity: 0.5; }
+    .empty-state p { font-size: 12px; }
+
+    .msg { display: flex; gap: 10px; align-items: flex-start; }
+
+    .msg-icon {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 500;
+      flex-shrink: 0; margin-top: 1px;
+      letter-spacing: 0.04em;
+    }
+
+    .msg-icon.user { background: var(--blue-border); color: var(--blue-text); }
+    .msg-icon.ai   { background: var(--green-border); color: var(--green-text); }
+
+    .msg-body { flex: 1; }
+
+    .msg-label {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--text-faint); margin-bottom: 5px;
+    }
+
+    .msg-text {
+      font-size: 13px; line-height: 1.75;
+      color: var(--text);
+      background: var(--surface2);
+      border-radius: 4px 12px 12px 12px;
+      padding: 10px 14px;
+      border: 0.5px solid var(--border);
+    }
+
+    .msg.user .msg-text {
+      border-radius: 12px 4px 12px 12px;
+      background: var(--blue-bg);
+      color: var(--blue-text);
+      border-color: var(--blue-border);
+    }
+
+    .thinking {
+      display: flex; gap: 4px;
+      padding: 12px 14px;
+      background: var(--surface2);
+      border-radius: 4px 12px 12px 12px;
+      border: 0.5px solid var(--border);
+      align-items: center;
+    }
+
+    .dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--text-faint);
+      animation: bounce 1.2s infinite;
+    }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-5px); opacity: 1; }
+    }
+
+    .input-row {
+      padding: 1rem 1.5rem 1.25rem;
+      border-top: 0.5px solid var(--border);
+      display: flex; gap: 8px; align-items: flex-end;
+    }
+
+    #q-input {
+      flex: 1;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      padding: 10px 14px;
+      border: 0.5px solid var(--border-md);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      resize: none;
+      min-height: 44px; max-height: 120px;
+      line-height: 1.5; outline: none;
+      transition: border-color 0.15s;
+    }
+
+    #q-input:focus { border-color: var(--blue-btn); }
+    #q-input::placeholder { color: var(--text-faint); }
+
+    #ask-btn {
+      background: var(--blue-btn);
+      color: var(--blue-bg);
+      border: none;
+      border-radius: var(--radius);
+      padding: 10px 20px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px; font-weight: 500;
+      cursor: pointer; height: 44px;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    #ask-btn:hover { background: var(--blue-btn-hover); }
+    #ask-btn:disabled { background: var(--surface2); color: var(--text-faint); cursor: not-allowed; }
+
+    .footer {
+      margin-top: 1.25rem;
+      text-align: center;
+      font-size: 10px;
+      color: var(--text-faint);
+      line-height: 1.7;
+    }
+
+    .footer a { color: var(--text-muted); text-decoration: underline; text-underline-offset: 2px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div id="api-banner">
+    <div class="banner-label">⚠ API Key Required</div>
+    <div class="banner-row">
+      <input type="password" id="api-key-input" placeholder="Paste your Anthropic API key: sk-ant-..." />
+      <button id="save-key-btn" onclick="saveKey()">Save ↗</button>
+    </div>
+    <div class="banner-hint">
+      Get a free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> &nbsp;·&nbsp;
+      Your key is stored only in your browser and sent directly to Anthropic — never anywhere else.
+    </div>
+  </div>
+
+  <div class="card" id="main-card">
+    <div class="header">
+      <span class="badge">SSA.gov</span>
+      <div class="header-text">
+        <h1>Totalization Agreements Q&A</h1>
+        <p>Ask anything about U.S. international Social Security agreements — sourced directly from SSA.gov</p>
+      </div>
+    </div>
+
+    <div class="suggestions">
+      <button class="suggestion-btn" onclick="ask('What is a totalization agreement?')">What is a totalization agreement?</button>
+      <button class="suggestion-btn" onclick="ask('Which countries have agreements with the US?')">Which countries have agreements?</button>
+      <button class="suggestion-btn" onclick="ask('What is the detached-worker rule?')">What is the detached-worker rule?</button>
+      <button class="suggestion-btn" onclick="ask('How do I get a certificate of coverage?')">Certificate of coverage?</button>
+      <button class="suggestion-btn" onclick="ask('How does the pyramid tax effect work?')">Pyramid tax effect?</button>
+      <button class="suggestion-btn" onclick="ask('What are totalization benefits and how do I qualify?')">Totalization benefits?</button>
+    </div>
+
+    <div class="chat-area" id="chat">
+      <div class="empty-state" id="empty">
+        <div class="empty-icon">◎</div>
+        <p>Ask a question below to get started</p>
+      </div>
+    </div>
+
+    <div class="input-row">
+      <textarea id="q-input" placeholder="Ask about U.S. Social Security agreements..." rows="1"
+        onkeydown="onKey(event)" oninput="autoResize(this)"></textarea>
+      <button id="ask-btn" onclick="submitQ()">Ask ↗</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    Answers grounded in <a href="https://www.ssa.gov/international/agreements_overview.html" target="_blank">SSA.gov International Programs</a>
+    &nbsp;·&nbsp; Not legal or financial advice &nbsp;·&nbsp; Built with Claude
+  </div>
+</div>
+
+<script>
+const SSA_CONTENT = `U.S. International Social Security Agreements — Totalization Agreements Overview
+
+INTRODUCTION:
+Since the late 1970s, the United States has established a network of bilateral Social Security agreements that coordinate the U.S. Social Security program with comparable programs of other countries. These are called "Totalization agreements." They have two main purposes: (1) eliminate dual Social Security taxation when a worker from one country works in another and is required to pay Social Security taxes to both countries on the same earnings, and (2) help fill gaps in benefit protection for workers who have divided their careers between the United States and another country.
+
+COUNTRIES WITH AGREEMENTS (and entry into force dates):
+Italy - November 1, 1978 | Germany - December 1, 1979 | Switzerland - November 1, 1980 | Belgium - July 1, 1984 | Norway - July 1, 1984 | Canada - August 1, 1984 | United Kingdom - January 1, 1985 | Sweden - January 1, 1987 | Spain - April 1, 1988 | France - July 1, 1988 | Portugal - August 1, 1989 | Netherlands - November 1, 1990 | Austria - November 1, 1991 | Finland - November 1, 1992 | Ireland - September 1, 1993 | Luxembourg - November 1, 1993 | Greece - September 1, 1994 | South Korea - April 1, 2001 | Chile - December 1, 2001 | Australia - October 1, 2002 | Japan - October 1, 2005 | Denmark - October 1, 2008 | Czech Republic - January 1, 2009 | Poland - March 1, 2009 | Slovak Republic - May 1, 2014 | Hungary - September 1, 2016 | Brazil - October 1, 2018 | Uruguay - November 1, 2018 | Slovenia - February 1, 2019 | Iceland - March 1, 2019. Total: 30 countries. Notable absences: Malaysia, China, India, UAE, Mexico.
+
+THE PROBLEM OF DUAL COVERAGE:
+Without coordination, people who work outside their country of origin may be covered under the systems of two countries simultaneously for the same work, requiring both countries to impose Social Security taxes. U.S. Social Security extends to American citizens and resident non-U.S. citizens employed abroad by American employers regardless of assignment duration. This frequently results in dual tax liability.
+
+THE PYRAMID EFFECT:
+Salary $50,000. Foreign SS Tax Rate 30% (employer $8,000; employee $7,000). Foreign Income Tax Rate 72%. Under tax equalization the employer pays cascading taxes — total employer cost becomes $83,000. Effective tax rate = 66%. In extreme cases the pyramid effect can push an employer's foreign Social Security costs to 65-70% of the employee's salary.
+
+ELIMINATING DUAL COVERAGE:
+The aim of all U.S. totalization agreements is to eliminate dual Social Security coverage and taxation. Workers cannot elect which system they contribute to — objective rules decide. The agreements exempt workers from coverage under one country's system when work would otherwise be covered under both.
+
+TERRITORIALITY RULE:
+An employee who would otherwise be covered by both the U.S. and a foreign system remains subject exclusively to the coverage laws of the country in which he or she is working.
+
+DETACHED-WORKER RULE:
+Each agreement (except Italy) includes an exception: a person temporarily transferred to work for the same employer in another country remains covered only by the country from which they were sent. The rule generally applies to assignments expected to last 5 years or less. For U.S. coverage to continue when working for a foreign affiliate, the American employer must have entered into a section 3121(l) agreement with the U.S. Treasury.
+
+ITALIAN AGREEMENT EXCEPTION:
+Italy's agreement does not include a detached-worker rule. Coverage is based on nationality instead. A U.S. citizen employed in Italy remains covered under the U.S. program and is exempt from Italian coverage.
+
+SELF-EMPLOYMENT RULES:
+U.S. Social Security coverage extends to self-employed U.S. citizens and residents whether their work is performed in the U.S. or abroad. Some agreements assign coverage to the worker's country of residence; others permit temporary transfer of self-employment activity.
+
+SPECIAL EXCEPTIONS:
+Each agreement permits authorities in both countries to grant exceptions to normal rules if both sides agree — invoked infrequently and only in compelling cases.
+
+CERTIFICATES OF COVERAGE:
+Workers exempt from taxes under an agreement must obtain a certificate of coverage from the country that continues to cover them. Employers generally request certificates on behalf of transferred employees; self-employed persons request their own. Requests to SSA should include: employer name/address, worker's full name, date/place of birth, citizenship, Social Security numbers, date of hiring, and assignment dates.
+
+TOTALIZATION BENEFITS:
+Workers who divided careers between countries sometimes fail to qualify for benefits because they haven't worked long enough. Under a Totalization agreement, SSA will count coverage periods earned under an agreement country's system. SSA can totalize credits only if the worker has at least 6 quarters of U.S. coverage. The partial benefit is proportional to the share of total career completed in the paying country.
+
+FILING CLAIMS:
+A claim for benefits under a Totalization agreement can be filed at any Social Security office in the U.S. or the foreign country.
+
+CONTACT SSA:
+Social Security Administration, ATTN: International Agreements, Office of Data Exchange, Policy Publications, and International Negotiations, 4700 Annex Building, 6401 Security Blvd., Baltimore, MD 21235.`;
+
+let busy = false;
+let apiKey = localStorage.getItem('ssa_qa_api_key') || '';
+
+const banner   = document.getElementById('api-banner');
+const mainCard = document.getElementById('main-card');
+const chat     = document.getElementById('chat');
+const input    = document.getElementById('q-input');
+const btn      = document.getElementById('ask-btn');
+const empty    = document.getElementById('empty');
+
+function init() {
+  if (apiKey) {
+    banner.classList.add('hidden');
+    mainCard.classList.add('no-banner');
+  }
+}
+
+function saveKey() {
+  const val = document.getElementById('api-key-input').value.trim();
+  if (!val.startsWith('sk-')) {
+    alert('That does not look like a valid Anthropic API key. It should start with "sk-ant-".');
+    return;
+  }
+  apiKey = val;
+  localStorage.setItem('ssa_qa_api_key', apiKey);
+  banner.classList.add('hidden');
+  mainCard.classList.add('no-banner');
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function onKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitQ(); }
+}
+
+function addMsg(role, text) {
+  if (empty) empty.style.display = 'none';
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.innerHTML = `
+    <div class="msg-icon ${role}">${role === 'user' ? 'YOU' : 'SSA'}</div>
+    <div class="msg-body">
+      <div class="msg-label">${role === 'user' ? 'Your question' : 'Answer'}</div>
+      <div class="msg-text">${text.replace(/\n/g, '<br>')}</div>
+    </div>`;
+  chat.appendChild(div);
+  div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function addThinking() {
+  const div = document.createElement('div');
+  div.className = 'msg ai';
+  div.innerHTML = `
+    <div class="msg-icon ai">SSA</div>
+    <div class="msg-body">
+      <div class="msg-label">Answer</div>
+      <div class="thinking"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+    </div>`;
+  chat.appendChild(div);
+  div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  return div;
+}
+
+async function ask(q) {
+  input.value = q;
+  await submitQ();
+}
+
+async function submitQ() {
+  const q = input.value.trim();
+  if (!q || busy) return;
+  if (!apiKey) { alert('Please enter your Anthropic API key above first.'); return; }
+
+  busy = true;
+  btn.disabled = true;
+  input.value = '';
+  input.style.height = 'auto';
+
+  addMsg('user', q);
+  const thinkEl = addThinking();
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `You are a helpful expert on U.S. International Social Security Totalization Agreements. Answer the user's question using ONLY the following official SSA.gov content. Be concise, accurate, and conversational. If the question cannot be answered from the provided content, say so and suggest they visit SSA.gov or consult a tax professional.\n\nSSA SOURCE CONTENT:\n${SSA_CONTENT}`,
+        messages: [{ role: 'user', content: q }]
+      })
+    });
+
+    const data = await res.json();
+    thinkEl.remove();
+    if (data.error) {
+      addMsg('ai', `API error: ${data.error.message || 'Unknown error. Please check your API key.'}`);
+    } else {
+      addMsg('ai', data?.content?.[0]?.text || 'No answer returned. Please try again.');
+    }
+  } catch (err) {
+    thinkEl.remove();
+    addMsg('ai', 'Connection error — please check your network and try again.');
+  }
+
+  busy = false;
+  btn.disabled = false;
+  input.focus();
+}
+
+init();
+</script>
+</body>
+</html>
